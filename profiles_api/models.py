@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
-
+from django.conf import settings
 
 # Create your models here.
 
@@ -63,3 +63,23 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 	def __str__(self):
 		""" Return string representation of our user """
 		return self.email
+
+
+class ProfileFeedItem(models.Model):
+	""" Profile status model """
+	""" Prevents anyone to create an item for a user that doesn-t exist """
+	user_profile = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		# Allows what happens to the item associated to a user profile / 
+		# in this case Cascade, if the user is erased, the list of items associated with the profile is erased """
+		on_delete = models.CASCADE
+	)
+	status_text = models.CharField(max_length=255)
+	created_on = models.DateTimeField(auto_now_add = True)
+
+
+	def __str__(self):
+		""" Returns the model as string """
+		return self.status_text
+
+

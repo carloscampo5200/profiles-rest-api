@@ -40,3 +40,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
 			instance.set_password(password)
 
 		return super().update(instance, validated_data)
+
+
+class ProfileFeedItemSerializer(serializers.ModelSerializer):
+	""" Serializes profile feed items """
+
+	class Meta:
+		model = models.ProfileFeedItem
+		# In the ProfileFeedItem class in the model, only status_text is editable by the user. Id & created on is set automatically 
+		fields = ('id', 'user_profile', 'status_text', 'created_on')
+		extra_kwargs = {'user_profile': {'read_only': True}}
+		# User_profile is set / it can only be assigned to an authenticated user
